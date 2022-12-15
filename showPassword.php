@@ -1,19 +1,11 @@
 <?php 
     session_start();
-    include_once __DIR__ . "/index.php";
-    if( !empty($_GET['password']) && !empty($_GET['password']) ) {
-        $credentials = [
-            "password" => $_GET['password'],
-        ];
+    
+    
+    echo $_SESSION['password'];
 
-        $user = (generatePassword());
+    
 
-        if( $user ) {
-            $_SESSION['logged_in'] = true;
-            header("Location: http://localhost:8888/php-strong-password/showPassword.php");
-        die();
-            
-        } 
-    }
-    echo (generatePassword());
+    //Stampa email e password salvati in $_SESSION con un echo 
 ?>
+<a href="index.php">Torna al form</a>

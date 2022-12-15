@@ -1,37 +1,36 @@
 <?php
-
-function generatePassword() {
-    $min_length=8;  //Minimum length of the password
-    $min_numbers=2; //Minimum of numbers AND special characters
-    $min_letters=2; //Minimum of letters
-    
-    $password = '';
-    $numbers=0;
-    $letters=0;
-    $length=0;
-    
-    while ( $length <= $min_length OR $numbers <= $min_numbers OR $letters <= $min_letters) {
-        $length+=1;
-        $type=rand(1, 3);
-        if ($type==1) {
-            $password .= chr(rand(33, 64)); //Numbers and special characters
-            $numbers+=1;
-        }elseif ($type==2) {
-            $password .= chr(rand(65, 90)); //A->Z
-            $letters+=1;
-        }else {
-            $password .= chr(rand(97, 122)); //a->z
-            $letters+=1;
-        }
+    session_start();
+    function generatePassword($min) {
+        $min_length= $min ;  //Minimum length of the password
+        $min_numbers=2; //Minimum of numbers AND special characters
+        $min_letters=2; //Minimum of letters
         
-    
-    } 
-    return $password;
-   
+        $password = '';
+        $numbers=0;
+        $letters=0;
+        $length=0;
+        
+        while ( $length < $min_length OR $numbers < $min_numbers OR $letters <= $min_letters) {
+            $length+=1;
+            $type=rand(1, 3);
+            if ($type==1 && $length < $min_length) {
+                $password .= chr(rand(33, 64)); //Numbers and special characters
+                $numbers+=1;
+            }elseif ($type==2 && $length < $min_length) {
+                $password .= chr(rand(65, 90)); //A->Z
+                $letters+=1;
+            }elseif($length < $min_length) {
+                $password .= chr(rand(97, 122)); //a->z
+                $letters+=1;
+            }       
+        } 
+        return $password;  
     }
-     
-    $_SESSION = (generatePassword());
-    
+    if( !empty($_GET['number'])) {
+
+        $_SESSION['password'] = generatePassword($_GET['number']);
+        header("Location: http://localhost/php-strong-password-generator/showPassword.php");
+    }
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -53,20 +52,18 @@ function generatePassword() {
         <form class="row g-3" action="index.php" method="GET">
 
             <div class="col-auto">
-                <label for="staticEmail2" class="visually-hidden">Email</label>
+                <label for="number" class="">Lunghezza</label>
 
-                <input type="text" readonly class="form-control-plaintext" id="staticEmail2" value="email@example.com">
+                <input type="number" min="3" class="" name="number" id="number">
             </div>
 
-            <div class="col-auto">
-                <label for="inputPassword2" class="visually-hidden">Password</label>
-                <input type="password" name="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
-            </div>
+            
 
             <div class="col-auto">
-                <a class="btn btn-primary mb-3" href="showPassword.php">Accedi</a>
+                <button type="submit" class="btn btn-primary mb-3">Generate Password</button>
             </div>
         </form>
+        
     </body>
 </html>
 
